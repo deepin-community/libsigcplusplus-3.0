@@ -1,0 +1,63 @@
+#!/bin/sh -eu
+
+workdir=$(mktemp -d)
+cleanup() {
+    rm -fr "$workdir"
+}
+trap cleanup 0 INT QUIT ABRT PIPE TERM
+cd "$workdir"
+
+out=out
+<<\EOF g++ -x c++ - -o "$out" $(pkg-config --cflags --libs sigc++-3.0)
+// Adapted from https://wiki.inkscape.org/wiki/Using_libsigc%252B%252B_signals
+
+#include <sigc++/sigc++.h>
+#include <iostream>
+
+class Emitter
+{
+public:
+   void generateRandomNumbers(int n) {
+      for (int i = 0; i < n; i++)
+         signal_number_changed.emit(std::rand());
+   }
+
+   sigc::signal<void (int)> signal_number_changed;
+};
+
+class Receiver
+{
+public:
+   Receiver(Emitter &emitter) {
+      emitter.signal_number_changed.connect(
+         sigc::mem_fun(*this, &Receiver::_countIfOdd)
+      );
+   }
+   float _getOddProportion() { return (float)odd_count/calls; }
+
+private:
+   int odd_count = 0;
+   int calls = 0;
+   void _countIfOdd(int i) {
+      calls++;
+      if (i%2 == 1)
+         odd_count++;
+   }
+};
+
+int main()
+{
+   std::srand(time(nullptr));
+
+   Emitter emitter;
+   Receiver receiver(emitter);
+   emitter.generateRandomNumbers(2345);
+   std::cout << "Odd-even ratio is " << receiver._getOddProportion() << '\n';
+
+   return 0;
+}
+EOF
+
+echo "build: OK"
+./"$out"
+echo "run: OK"

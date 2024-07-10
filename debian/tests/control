@@ -1,0 +1,6 @@
+Tests: upstream
+Depends: @, @builddeps@
+
+Tests: build
+Restrictions: superficial
+Depends: g++, libsigc++-3.0-dev
