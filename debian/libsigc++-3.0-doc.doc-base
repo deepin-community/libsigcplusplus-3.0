@@ -1,0 +1,9 @@
+Document: libsigc++-3.0
+Title: libsigc++-3.0 Documentation
+Abstract: Programming documentation for the 3.0 branch of the
+ libsigc++ library.
+Section: Programming/C++
+
+Format: HTML
+Index: /usr/share/doc/libsigc++-3.0-doc/reference/html/index.html
+Files: /usr/share/doc/libsigc++-3.0-doc/reference/html/*.html /usr/share/doc/libsigc++-3.0-doc/tutorial/html/*.html

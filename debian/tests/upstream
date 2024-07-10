@@ -1,0 +1,4 @@
+#!/bin/sh
+dh_auto_configure -O--buildsystem=meson -- \
+  -Dmaintainer-mode=true -Dbuild-documentation=false -Dwarnings=max
+dh_auto_test -O--buildsystem=meson
